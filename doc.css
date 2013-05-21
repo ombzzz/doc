@@ -1,0 +1,106 @@
+<style>
+
+/*------inicio controles edicion------*/
+div.b span:hover { 
+	cursor: pointer;
+}
+
+div.b span { 
+	color: blue; 
+	padding: 3px;
+}
+
+textarea.ed { 
+	width: 90%;
+}
+
+div.ed span.ok:hover {
+	cursor: pointer;
+}
+
+div.ed span.ok {
+	color: blue; 
+}
+/*------fin controles edicion------*/
+
+body.min {
+	z-index: 0; /*para que no lo tape el logo*/
+	border: 1px solid;
+	margin-left: 40px;
+	margin-top: 15px;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+
+.mtit {
+	text-align: center;
+	background: black;
+	color: white;
+	font-family: Arial;
+	font-size: 18px;
+	font-weight: bolder;
+	padding: 3px;
+	width: 300px;
+	text-transform: uppercase;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 40px;
+}
+
+.mtit:before {
+  content:"";
+  width: 100px;
+  height: 100px;
+  position:absolute; /*or absolute*/
+  z-index: -1;
+  left:45px;
+  top:27px;
+  background-image: url('minuta-logo.png');
+  background-size: 65px;
+  background-repeat: no-repeat;
+  //background:red;
+}
+
+.mtit2 {
+	font-family: Arial;
+	font-weight: bold;
+	text-transform: uppercase;
+	//margin-top: 10px;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+.mtit2:before {
+	content: ".....";
+	border: 1px solid;
+	background: black;
+}
+.mpar {
+	font-family: Arial;
+	padding: 5px;
+	/*border-left: 1px solid;
+	border-right: 1px solid;*/
+}
+
+.mfec {
+	border: 1px solid;
+	width: 80px;
+	position: relative;
+	left: 89%;
+	bottom: 8%;
+	font-family: Arial;
+	font-size: 15px;
+	font-weight: bolder;
+	text-transform: uppercase;
+}
+
+.mfec:first-line {
+	background: black;
+	color: white;
+	border: 3px solid red;
+	display: block;
+}
+
+.mfec:before {
+	content: "...";
+	color: black;
+}
