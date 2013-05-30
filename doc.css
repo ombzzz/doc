@@ -55,7 +55,7 @@ body.min {
 	margin-top: 40px;
 }
 
-body:before {
+body.min:before {
   content:"";
   width: 100px;
   height: 100px;
@@ -124,6 +124,23 @@ body:before {
 div.par {
 	position:relative;
 }
+
+/* ------------SIN TIPO----------------*/
+
+body.st {
+	margin: 25px;
+	padding: 20px;
+	box-shadow: 0 15px 15px #aaa;
+}
+
+.stpar {
+	font-family: Arial;
+	padding: 5px;
+}
+
+
+/* -----------FIN SIN TIPO-------------*/
+
 
 /*------inicio controles edicion------*/
 

@@ -6,8 +6,31 @@ if( $accion == "ver" ){
 	mostrar($doc);
 }
 
+if( $accion == "nuevo" ){
 
-if( $accion == "persist" ){
+	$doc = $_GET["doc"];
+	$tipo = $_GET["tipo"];
+
+	if( $tipo == "minuta" ){
+		$tipo = $tipo;//no hay null; en php?
+	}
+	else {
+		$tipo = "sintipo";	
+	}
+
+	$file = "$tipo.templ";
+	$newfile = "$doc.html";
+
+	if( !copy($file, $newfile ) ){
+	    echo "error copiando archivo $file a $newfile\n";
+		return;
+	}
+	else {
+		$url = "$doc.html";
+		header('Location: '. $url );
+	}
+}	
+else if( $accion == "persist" ){
 
 	$result = array();
 	$result["result"]="ok";
@@ -37,8 +60,7 @@ if( $accion == "persist" ){
 	echo json_encode( $result );
 	return;
 }
-
-if( $accion == "get" ){
+else if( $accion == "get" ){
 
 	$result = array();
 	$result["result"]="ok";
@@ -53,6 +75,19 @@ if( $accion == "get" ){
 	$result["txt"] = $docenparrafos[$parnum];
 
 	echo json_encode( $result );
+	return;
+}
+else {
+
+	echo <<<FINNN
+	<div class=notice>
+	<p>para crear nuevo documento, <a href=http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=tareas>http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=tareas</a>
+	<p>El tipo es opcional, actualmente solo se soporta minuta.
+
+	<p>Por ejemplo para crear una minuta nueva: <a href=http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=minuta-minimotec&tipo=minuta>http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=minuta-minimotec&tipo=minuta</a>
+
+	</div><!--notice-->
+FINNN;
 	return;
 }
 
