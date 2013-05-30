@@ -11,8 +11,6 @@ if( $accion == "persist" ){
 
 	$result = array();
 	$result["result"]="ok";
-	//$result["echotxt"]=$_GET["partxt"];
-	//$result["echonum"]=$_GET["parnum"];
 
 	$doc = $_GET["doc"];
 	$filename=$doc;
@@ -20,6 +18,8 @@ if( $accion == "persist" ){
 	$parnum = $_GET["parnum"];
 
 	$partxt = str_replace( "__n__", "\n", $partxt);
+	$partxt = str_replace( "__s__", "#", $partxt);
+
 	$docenparrafos = docenparrafos( $doc );
 
 	$docenparrafos[$parnum]=$partxt . "\n";
@@ -34,6 +34,24 @@ if( $accion == "persist" ){
 		fclose($fp);
 		//mostrardoc( $filename );
 	}
+	echo json_encode( $result );
+	return;
+}
+
+if( $accion == "get" ){
+
+	$result = array();
+	$result["result"]="ok";
+
+	$doc = $_GET["doc"];
+	$filename=$doc;
+	$parnum = $_GET["parnum"];
+
+	$docenparrafos = docenparrafos( $doc );
+
+	//$result["txt"]=str_replace( "__n__", "\n", $docenparrafos[$parnum] );
+	$result["txt"] = $docenparrafos[$parnum];
+
 	echo json_encode( $result );
 	return;
 }

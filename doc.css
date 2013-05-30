@@ -1,38 +1,46 @@
 <style>
 
 /*------inicio controles edicion------*/
-div.b span:hover { 
-	cursor: pointer;
-}
 
-div.b span { 
-	color: blue; 
-	padding: 3px;
-}
-
-textarea.ed { 
+	
+div.ed {
 	width: 90%;
+	position: relative;
 }
 
-div.ed span.ok:hover {
+span.ok {
+	position: absolute;
+	top: 1	0px;
+	right: 10px;
+	color: blue;
+	text-transform: lowercase;
+}
+
+textarea.ed {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	overflow: hidden;
+}
+
+span.ok:hover {
 	cursor: pointer;
-}
-
-div.ed span.ok {
-	color: blue; 
 }
 /*------fin controles edicion------*/
 
 body.min {
 	z-index: 0; /*para que no lo tape el logo*/
 	border: 1px solid;
+	width: 1200px;
 	margin-left: 40px;
 	margin-top: 15px;
 	margin-right: 15px;
 	margin-bottom: 15px;
 }
 
+
 .mtit {
+	position: relative;
 	text-align: center;
 	background: black;
 	color: white;
@@ -47,14 +55,19 @@ body.min {
 	margin-top: 40px;
 }
 
-.mtit:before {
+body:before {
   content:"";
   width: 100px;
   height: 100px;
   position:absolute; /*or absolute*/
   z-index: -1;
-  left:45px;
-  top:27px;
+  // left:45px;
+ // top:27px;
+	//left:-315px;
+ //	top:-37px;
+ left: 3%;
+ top: 3%;
+
   background-image: url('minuta-logo.png');
   background-size: 65px;
   background-repeat: no-repeat;
@@ -62,6 +75,7 @@ body.min {
 }
 
 .mtit2 {
+	//position: relative;
 	font-family: Arial;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -75,6 +89,7 @@ body.min {
 	background: black;
 }
 .mpar {
+	//position: relative;
 	font-family: Arial;
 	padding: 5px;
 	/*border-left: 1px solid;
@@ -86,11 +101,12 @@ body.min {
 	width: 80px;
 	position: relative;
 	left: 89%;
-	bottom: 8%;
+	bottom: 5%;
 	font-family: Arial;
 	font-size: 15px;
 	font-weight: bolder;
 	text-transform: uppercase;
+	text-align: center;
 }
 
 .mfec:first-line {
@@ -101,6 +117,62 @@ body.min {
 }
 
 .mfec:before {
-	content: "...";
-	color: black;
+	content: "      ";
+	white-space: pre-wrap;
 }
+
+div.par {
+	position:relative;
+}
+
+/*------inicio controles edicion------*/
+
+span#bd { 
+	text-transform: lowercase;
+	color: #aebe77; 
+	//display: block;
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+
+span#be { 		
+	text-transform: lowercase;
+	color: #7f80a0; 
+	padding: 0px;
+	margin: 0px;
+	//display:block;
+	position: absolute;
+	right: 15px;
+	top: 0px;
+}
+
+span#bi { 
+	text-transform: lowercase;
+	color: #a0a4a0; 
+	padding: 0px;
+	margin: 0px;
+	//display:block;
+	position: absolute;
+	right: 30px;
+	top: 0px;
+}
+
+span#ba { 
+	text-transform: lowercase;
+	color: #aebe77; 
+	//display: block;
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	right:45px;
+	top: 0px;
+}
+
+span.bot { 
+	cursor: pointer;
+}
+/*------fin controles edicion------*/
+
