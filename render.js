@@ -52,6 +52,10 @@ function rendersinconbotones( doc, el, texto, sincon ){
 		console.log( "rcb: el " + $(el).attr("id") + " par def " + window.pardef );
 	}
 		
+	//console.log( "antes: " + texto );
+	texto = marked( texto );
+	texto = texto.replace(/<\/?p>/g, "");
+	//console.log( "despues: " + texto );
 	$(el).html( texto );
 
 	var acciones;
@@ -338,6 +342,23 @@ function persistdisponible(){
 // 20000101-ob: crea el metodo (min)
 //--------------------------------------------------------------------------------------------------------------
 function rendereartodo(){
+
+	marked.setOptions({
+	  gfm: true,
+	  tables: true,
+	  breaks: false,
+	  pedantic: false,
+	  sanitize: true,
+	  smartLists: true,
+	  smartypants: false,
+	  langPrefix: 'language-',
+	  highlight: function(code, lang) {
+		if (lang === 'js') {
+		  return highlighter.javascript(code);
+		}
+		return code;
+	  }
+	});
 
 	pd = persistdisponible();
 
