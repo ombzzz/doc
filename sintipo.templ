@@ -1,0 +1,64 @@
+<script src=http://cad-dms04/appweb/init/doc/jquery.js></script>
+<script src=http://cad-dms04/appweb/init/doc/render.js></script>
+
+Nota: en lo que sigue llamamos "doc" a esta funcionalidad de edicion de archivos via web.
+
+Hola. Este es un nuevo documento creado a partir de un template con nombre "sintipo" ( sintipo.templ en 
+el home de "doc" )
+
+Aprovecho para comentarles como funciona "doc". 
+
+La idea es usarlo para crear documentos con formato pero manteniendo la simplicidad del texto ascii para escribir documentos. 
+
+Por lo tanto, resultara mas util para documentos donde el valor se encuentre en las palabras y no en el formato, o tambien,
+en documentos donde el formato sea bastante fijo y por lo tanto pueda obtenerse desde un template ( ejemplo: minuta ecogas ).
+
+COMO CREAR UN NUEVO DOCUMENTO? 
+
+Llamar a persist pasandole:
+
+accion=nuevo
+doc=nombredelarchivosinextension ( por ejemplo minuta-minimotecnico )
+tipo=tipoopcional
+
+El tipo actualmente puede ser: 
+
+. minuta
+
+Persist creara el documento ( por ejemplo minuta-minimotecnico.html ) y redireccionara el browser al documento
+para que lo veas en pantalla.
+
+COMO AGREGAR CONTENIDO AL DOCUMENTO?  
+
+Hay dos formas: editando tipo wiki o editando directamente el documento con un editor de texto.
+
+De cualquiera de las dos formas, el documento guardado ( por ejemplo minuta-minimotecnico.html ) tendra solo
+ascii y opcionalmente "tags" de formateo (ver mas abajo).
+
+COMO FORMATEARLO ?  
+
+Agregando "tags" de formateo al final de cada parrafo ( ver mas abajo que es un parrafo ). Actualmente se soportan los siguientes tags:
+
+[numeral]mtit  : minuta ecogas: titulo principal de la minuta
+[numeral]mfec  : minuta ecogas: fecha de la minuta
+[numeral]mtit2 : minuta ecogas: titulos separadores de cada seccion
+[numeral]mpar  : minuta ecogas: parrafo de la minuta
+
+A QUE CONSIDERA "DOC" UN PARRAFO ?
+
+A cualquier secuencia de palabras separadas por 2 (dos) o mas saltos de linea consecutivos. Por ejemplo:
+
+Esto es el primer parrafo y [salto de linea]
+tiene dos lineas separadas por un salto de linea.
+[salto de linea]
+
+Este es el segundo parrafo con una sola linea.
+[salto de linea]
+[salto de linea]
+
+Este es el tercer parrafo separado por 3(tres) saltos de linea
+[salto de linea]
+[salto de linea]
+[salto de linea]
+
+
