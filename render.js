@@ -1,47 +1,10 @@
 //nota este script requiere jquery, incluirlo en el html por favor antes de incluir render.js
 
 $(document).ready( function(){
+	$("body").append( "<div class=naveg><a target=_blank href=http://cad-dms04:8200>repo</a><div class=nota>pasar nomenu=1 para ocultar</div></div>\n" );
+	$("html").prepend("<link rel=stylesheet type=text/css href=../doc.css />" );
 
-	pathArray = window.location.pathname.split( '/' );
-	var doc = pathArray[pathArray.length-1];
-
-	$("html").prepend("<link rel=stylesheet type=text/css href=doc.css />" );
-
-	orig = $("body").html();
-
-	var re = /\n\n/;
-	var arr = orig.split(re);
-	//onsole.log( arr);
-
-	$("body").html("");
-	var cant = 0;
-	var indiciodetipoencontrado = 0;
-
-	for(var key in arr)
-    {
-    	cant++;
- 		$("body").append( "<div class=par id=p" + cant + "></div>");
-    	//onsole.log( "key es " + key );
-        //onsole.log( arr[key] );
-		if( arr[key].indexOf( "#mtit" ) != -1 && arr[key].indexOf( "#mtit2" ) == -1 ){
-			window.pardef = "mpar";
-			console.log( "main: seteando pardef mpar (minuta)" );
-			tipobody = "min";
-			indiciodetipoencontrado = 1;
-		}
-		else {
-			window.pardef = "stpar";
-		}
-        renderconbotones( doc, $("div#p"+cant), arr[key] );
-    }
-	if( ! indiciodetipoencontrado ){
-		console.log( "main: seteando pardef stpar (sintipo)" );
-		$( "body" ).addClass( "st");
-	}
-	else {
-		console.log( "main: indicio de tipo encontrado! seteando pardef a " + tipobody );
-		$( "body" ).addClass( tipobody );
-	}
+	rendereartodo();
 
 })
 
@@ -55,7 +18,7 @@ $(document).ready( function(){
 //--------------------------------------------------------------------------------------------------------------
 function renderconbotones( doc, el, texto ){
 
-	//onsole.log( "renderconbotones llamado para el " + el.id + " texto " + texto );
+	console.log( "renderconbotones llamado para el " + el.id + " texto " + texto );
 
 	texto = texto.replace( "\n", "<br>");
 	var found = false;
@@ -93,30 +56,50 @@ function renderconbotones( doc, el, texto ){
 		
 	$(el).html( texto );
 
-	var acciones = "<span class=bot id=be>e</span><span class=bot id=bd>d</span><span class=bot id=bi>i</span><span class=bot id=ba>v</span>";
+	var acciones = "<span class=bot id=be>e</span><span class=bot id=bd>d</span><span class=bot id=bi>^</span><span class=bot id=ba>v</span>";
 
 	$(el).html( texto + " " + acciones );
 	$(el).find('span.bot').bind('click', function() {
 		if( this.id == "be"){
-			hacereditable( doc, this.parentNode );
+			usuarioquiereeditar( doc, this.parentNode );
+		}
+		else if( this.id == "bd" ){
+			usuarioquiereeliminar( doc, this.parentNode );
+		}
+		else if( this.id == "ba" ){
+			usuarioquiereinsertardespuesde( doc, this.parentNode );
+		}
+		else if( this.id == "bi" ){
+			usuarioquiereinsertarantesde( doc, this.parentNode );
 		}
 	});
+
+	$(el).hover(
+		function () {
+		    $(this).children( "span#be, span#bd, span#bi, span#ba" ).addClass( "visible" );
+			//$(this).children().show();
+		},
+		function () {
+		    $(this).children( "span#be, span#bd, span#bi, span#ba" ).removeClass( "visible" );
+		    //$(this).children().hide();
+		}
+	);
 
 }
 
 //--------------------------------------------------------------------------------------------------------------
-// hacereditable                                                                                     20000101-ob
+// usuarioquiereditar                                                                                20000101-ob
 //
 // quehace
 //
 // 20000101-ob: crea el metodo (min)
 //--------------------------------------------------------------------------------------------------------------
-function hacereditable( doc, el ){
+function usuarioquiereeditar( doc, el ){
 	console.log( "he: haciendo editable " + el.id);
 	texto=pedirtextoapersist( doc, el );
 	
 	$(el).html( "<textarea class=ed>" + texto + "</textarea><span class=ok>ok</span>");
-	$( "span.ok").bind( 'click', function() {
+	$(el).find("span.ok").bind( 'click', function() {
 		auxx = $(el).find( "textarea" ).val();
 		console.log( "he: ok cliqueado en par " + el.id + " texto ahora es " + auxx );
 		avisarpersist( doc, el, auxx );
@@ -125,6 +108,77 @@ function hacereditable( doc, el ){
 
     var ta = $("textarea.ed");
 	ta.css( "height", ta.prop("scrollHeight") );
+}
+
+//--------------------------------------------------------------------------------------------------------------
+// usuarioquiereinsertar                                                                     20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function usuarioquiereinsertar( doc, elx, nuevopar, aod ){
+	console.log( "r.uqiad: usuario quiere insertar en " + (nuevopar/1) );
+	console.log( "he: haciendo editable " + nuevopar );
+	
+	if( aod == "a" )
+		$(elx).before( "<div class=par id="+"p"+nuevopar + "></div>" );
+	else if( aod == "d" ) 
+		$(elx).after( "<div class=par id="+"p"+nuevopar + "></div>" );
+	else {
+		console.log( "r.uqe: aod no recibido" );
+		return;
+	}
+	var selx = "div#" + "p"+nuevopar;
+	selx = selx.replace( ".", "\\." );//escape para jquery
+	var el = $( selx );
+
+	$(el).html( "<textarea class=ed placeholder=\"nuevo parrafo!\"></textarea><span class=ok>ok</span>");
+	$(el).find("span.ok").bind( 'click', function() {
+		auxx = $(el).find( "textarea" ).val();
+		console.log( "he: ok cliqueado en par " + $(el).attr("id") + " texto ahora es " + auxx );
+		avisarpersist( doc, el.get(0), auxx );
+		rendereartodo();
+		//renderconbotones( doc, el.get(0), auxx );
+	});
+}
+
+
+//--------------------------------------------------------------------------------------------------------------
+// usuarioquiereinsertarantesde                                                                      20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function usuarioquiereinsertarantesde( doc, elx ){
+	var nuevopar = (elx.id.substring( 1 )/1) - 0.5;
+	usuarioquiereinsertar( doc, elx, nuevopar, "a" )
+}
+
+//--------------------------------------------------------------------------------------------------------------
+// usuarioquiereinsertardespuesde                                                                      20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function usuarioquiereinsertardespuesde( doc, elx ){
+	var nuevopar = (elx.id.substring( 1 )/1) + 0.5;
+	usuarioquiereinsertar( doc, elx, nuevopar, "d" )
+}
+
+//--------------------------------------------------------------------------------------------------------------
+// usuarioquiereeliminar                                                                             20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function usuarioquiereeliminar( doc, el ){
+	console.log( "he: eliminando " + el.id);
+	borrarpersist( doc, el );
+	$(el).hide();
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -140,7 +194,7 @@ function pedirtextoapersist( doc, el ){
 	$.ajaxSetup( { "async": false } );
 	var result;
 
-	var url = 'persist.php?accion=get&doc=' + doc + '&parnum=' + parnum;
+	var url = '../persist.php?accion=get&doc=' + doc + '&parnum=' + parnum;
 	console.log( "ptap: llamando ajax para url " + url );
 
 	$.getJSON( url, function(data) {
@@ -154,6 +208,35 @@ function pedirtextoapersist( doc, el ){
 }
 
 //--------------------------------------------------------------------------------------------------------------
+// borrarpersist                                                                                     20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function borrarpersist( doc, el ){
+	var parnum = el.id.substring( 1 );
+
+	$.ajaxSetup( { "async": false } );
+	var result;
+
+	var url = '../persist.php?accion=del&doc=' + doc + '&parnum=' + parnum;
+	console.log( "ptap: llamando ajax para url " + url );
+
+	$.getJSON( url, function(data) {
+		result = data; //orlando: closure!
+	});
+
+	console.log( "ptap: ajax volvio " + result["result"] );
+	if( result["result"] == "ok" ){
+		return 0;
+	}
+	else {
+		return 1;
+	}
+}
+
+//--------------------------------------------------------------------------------------------------------------
 // avisarapersist                                                                                    20000101-ob
 //
 // quehace
@@ -161,16 +244,17 @@ function pedirtextoapersist( doc, el ){
 // 20000101-ob: crea el metodo (min)
 //--------------------------------------------------------------------------------------------------------------
 function avisarpersist( doc, el, texto ){
-	console.log( "aap: php deberia registrar texto " + textoesc + " en par " + parnum );
 
 	var parnum = el.id.substring( 1 );
 	var textoesc = texto.replace( "\n", "__n__");
 	textoesc = texto.replace( "#", "__s__");
+
+	//console.log( "aap: php deberia registrar texto " + textoesc + " en par " + parnum );
 	
 	$.ajaxSetup( { "async": false } );
 	var result;
 
-	var url = 'persist.php?accion=persist&doc=' + doc + '&parnum=' + parnum + "&partxt=" + textoesc;
+	var url = '../persist.php?accion=persist&doc=' + doc + '&parnum=' + parnum + "&partxt=" + textoesc;
 	console.log( "aap: llamando ajax para url " + url );
 
 	$.getJSON( url, function(data) {
@@ -181,4 +265,85 @@ function avisarpersist( doc, el, texto ){
 }
 
 
+//--------------------------------------------------------------------------------------------------------------
+// getdoc                                                                                            20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function getdoc( docx ){
 
+	$.ajaxSetup( { "async": false } );
+	var result;
+
+	var url = '../persist.php?accion=getdoc&doc=' + docx;
+	console.log( "r.gd: llamando ajax para url " + url );
+
+	$.getJSON( url, function(data) {
+		result = data; //orlando: closure!
+	});
+
+	return result["txt"];
+}
+
+
+
+
+//--------------------------------------------------------------------------------------------------------------
+// renderertodo                                                                                      20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function rendereartodo(){
+
+	pathArray = window.location.pathname.split( '/' );
+	var doc = pathArray[pathArray.length-1];
+
+/*
+	orig = $("body").html();
+
+	var re = /\n\n/;
+	var arr = orig.split(re);
+	//onsole.log( arr);
+*/
+
+	orig = getdoc( doc );
+	var re = /\n\n/;
+	var arr = orig.split(re);
+
+	$("body").html("");
+
+	var cant = 0;
+	var indiciodetipoencontrado = 0;
+
+	for( var key in arr )
+    {
+		if( arr[key].indexOf( "<script" ) == -1 && arr[key].indexOf( "</script" == -1 )){
+			cant++;
+			$("body").append( "<div class=par id=p" + cant + "></div>");
+			//onsole.log( "key es " + key );
+			//onsole.log( arr[key] );
+			if( arr[key].indexOf( "#mtit" ) != -1 && arr[key].indexOf( "#mtit2" ) == -1 ){
+				window.pardef = "mpar";
+				console.log( "main: seteando pardef mpar (minuta)" );
+				tipobody = "min";
+				indiciodetipoencontrado = 1;
+			}
+			else if( !indiciodetipoencontrado ) {
+				window.pardef = "stpar";
+			}
+			renderconbotones( doc, $("div#p"+cant), arr[key] );
+		}
+    }
+	if( ! indiciodetipoencontrado ){
+		console.log( "main: seteando pardef stpar (sintipo)" );
+		$( "body" ).addClass( "st");
+	}
+	else {
+		console.log( "main: indicio de tipo encontrado! seteando pardef a " + tipobody );
+		$( "body" ).addClass( tipobody );
+	}
+}
