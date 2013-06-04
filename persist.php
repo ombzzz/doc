@@ -165,6 +165,13 @@ else if( $accion == "del" ){
 	echo json_encode( $result );
 	return;
 }
+if( $accion == "check" ){
+
+	$result = array();
+	$result["result"]="ok";
+	echo json_encode( $result );
+	return;
+}	
 else {
 
 	echo <<<FINNN

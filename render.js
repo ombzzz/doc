@@ -1,8 +1,6 @@
 //nota este script requiere jquery, incluirlo en el html por favor antes de incluir render.js
 
 $(document).ready( function(){
-	$("body").append( "<div class=naveg><a target=_blank href=http://cad-dms04:8200>repo</a><div class=nota>pasar nomenu=1 para ocultar</div></div>\n" );
-	$("html").prepend("<link rel=stylesheet type=text/css href=../doc.css />" );
 
 	rendereartodo();
 
@@ -10,15 +8,15 @@ $(document).ready( function(){
 
 
 //--------------------------------------------------------------------------------------------------------------
-// renderconbotones                                                                                  20000101-ob
+// rendersinconbotones                                                                               20000101-ob
 //
 // quehace
 //
 // 20000101-ob: crea el metodo (min)
 //--------------------------------------------------------------------------------------------------------------
-function renderconbotones( doc, el, texto ){
+function rendersinconbotones( doc, el, texto, sincon ){
 
-	console.log( "renderconbotones llamado para el " + el.id + " texto " + texto );
+	console.log( "rendersinconbotones llamado para el " + el.id + " texto " + texto );
 
 	texto = texto.replace( "\n", "<br>");
 	var found = false;
@@ -56,7 +54,14 @@ function renderconbotones( doc, el, texto ){
 		
 	$(el).html( texto );
 
-	var acciones = "<span class=bot id=be>e</span><span class=bot id=bd>d</span><span class=bot id=bi>^</span><span class=bot id=ba>v</span>";
+	var acciones;
+	
+	if( sincon ){
+		acciones = "<span class=bot id=be>e</span><span class=bot id=bd>d</span><span class=bot id=bi>^</span><span class=bot id=ba>v</span>";
+	}
+	else {
+		acciones = "";
+	}
 
 	$(el).html( texto + " " + acciones );
 	$(el).find('span.bot').bind('click', function() {
@@ -103,7 +108,7 @@ function usuarioquiereeditar( doc, el ){
 		auxx = $(el).find( "textarea" ).val();
 		console.log( "he: ok cliqueado en par " + el.id + " texto ahora es " + auxx );
 		avisarpersist( doc, el, auxx );
-		renderconbotones( doc, el, auxx );
+		rendersinconbotones( doc, el, auxx, 1 );
 	});
 
     var ta = $("textarea.ed");
@@ -139,7 +144,7 @@ function usuarioquiereinsertar( doc, elx, nuevopar, aod ){
 		console.log( "he: ok cliqueado en par " + $(el).attr("id") + " texto ahora es " + auxx );
 		avisarpersist( doc, el.get(0), auxx );
 		rendereartodo();
-		//renderconbotones( doc, el.get(0), auxx );
+		//rendersinconbotones( doc, el.get(0), auxx );
 	});
 }
 
@@ -288,6 +293,41 @@ function getdoc( docx ){
 }
 
 
+//--------------------------------------------------------------------------------------------------------------
+// persistdisponible                                                                                 20000101-ob
+//
+// quehace
+//
+// 20000101-ob: crea el metodo (min)
+//--------------------------------------------------------------------------------------------------------------
+function persistdisponible(){
+
+	$.ajaxSetup( { "async": false } );
+	var result;
+
+	var url = '../persist.php?accion=check';
+	console.log( "r.pd: llamando ajax para url " + url );
+
+	$.getJSON( url, function(data) {
+		result = data; //orlando: closure!
+	});
+
+	var ret = 0;
+	
+	if( result == undefined ){
+		ret = 0;
+	}
+	else {
+		if( result["result"] == "ok" )
+			ret = 1;
+		else
+			ret = 0;
+	}
+	return ret;
+}
+
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------
@@ -299,16 +339,17 @@ function getdoc( docx ){
 //--------------------------------------------------------------------------------------------------------------
 function rendereartodo(){
 
+	pd = persistdisponible();
+
+	if( pd ){
+		console.log( "r.rt: persist disponible, rendereando editable" );
+	}
+	else {
+		console.log( "r.rt: persist no disponible, rendereando no editable" );
+	}
+
 	pathArray = window.location.pathname.split( '/' );
 	var doc = pathArray[pathArray.length-1];
-
-/*
-	orig = $("body").html();
-
-	var re = /\n\n/;
-	var arr = orig.split(re);
-	//onsole.log( arr);
-*/
 
 	orig = getdoc( doc );
 	var re = /\n\n/;
@@ -320,7 +361,7 @@ function rendereartodo(){
 	var indiciodetipoencontrado = 0;
 
 	for( var key in arr )
-    {
+	{
 		if( arr[key].indexOf( "<script" ) == -1 && arr[key].indexOf( "</script" == -1 )){
 			cant++;
 			$("body").append( "<div class=par id=p" + cant + "></div>");
@@ -335,9 +376,9 @@ function rendereartodo(){
 			else if( !indiciodetipoencontrado ) {
 				window.pardef = "stpar";
 			}
-			renderconbotones( doc, $("div#p"+cant), arr[key] );
+			rendersinconbotones( doc, $("div#p"+cant), arr[key], pd );
 		}
-    }
+	}
 	if( ! indiciodetipoencontrado ){
 		console.log( "main: seteando pardef stpar (sintipo)" );
 		$( "body" ).addClass( "st");
@@ -346,4 +387,11 @@ function rendereartodo(){
 		console.log( "main: indicio de tipo encontrado! seteando pardef a " + tipobody );
 		$( "body" ).addClass( tipobody );
 	}
+
+	if( pd && window.location.href.indexOf( "nomenu=1" ) == -1 ){
+		urln=window.location.href + "?nomenu=1";
+		$("body").append( "<div class=naveg><a target=_blank href=http://cad-dms04:8200>repo</a><div class=nota>pasar <a href="+urln+ ">nomenu=1</a> para ocultar</div></div>\n" );
+	}
+	$("html").prepend("<link rel=stylesheet type=text/css href=../doc.css />" );
+
 }
