@@ -55,7 +55,7 @@ function rendersinconbotones( doc, el, texto, sincon ){
 	//console.log( "antes: " + texto );
 	texto = marked( texto );
 	texto = texto.replace(/<\/?p>/g, "");
-	//console.log( "despues: " + texto );
+	console.log( "despues: " + texto );
 	$(el).html( texto );
 
 	var acciones;
@@ -348,7 +348,7 @@ function rendereartodo(){
 	  tables: true,
 	  breaks: false,
 	  pedantic: false,
-	  sanitize: true,
+	  sanitize: false,
 	  smartLists: true,
 	  smartypants: false,
 	  langPrefix: 'language-',
