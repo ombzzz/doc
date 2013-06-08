@@ -18,10 +18,11 @@ function rendersinconbotones( doc, el, texto, sincon ){
 
 	console.log( "rendersinconbotones llamado para el " + el.id + " texto " + texto );
 
-	texto = texto.replace( "\n", "<br>");
 	var found = false;
 
 	$(el).removeClass( "mtit mtit2 mpar mfec" );
+
+	texto = texto.replace(/\n/g, "<br>");
 
    	if( texto.indexOf( "#mtit" ) != -1 && texto.indexOf( "#mtit2" ) == -1 ){
    		$(el).addClass( "mtit");
@@ -51,11 +52,19 @@ function rendersinconbotones( doc, el, texto, sincon ){
    		$(el).addClass( window.pardef );
 		console.log( "rcb: el " + $(el).attr("id") + " par def " + window.pardef );
 	}
-		
+
+	//lo siguiente para evitar romper las listas del markdown:
+	//antes: * uno<br>* dos
+	//despues: <ul>
+	//<li>uno<br>* dos</li> <--fail
+	//</ul>
+	texto = texto.replace(/<br>\*/g, "\n*");
+	//texto = texto.replace( "<br>*", "\n*" );
+
 	//console.log( "antes: " + texto );
 	texto = marked( texto );
 	texto = texto.replace(/<\/?p>/g, "");
-	console.log( "despues: " + texto );
+	//console.log( "despues: " + texto );
 	$(el).html( texto );
 
 	var acciones;
@@ -372,7 +381,12 @@ function rendereartodo(){
 	pathArray = window.location.pathname.split( '/' );
 	var doc = pathArray[pathArray.length-1];
 
-	orig = getdoc( doc );
+	if( pd ){
+		orig = getdoc( doc );
+	}
+	else {
+		orig = $("body").html();
+	}
 	var re = /\n\n/;
 	var arr = orig.split(re);
 
@@ -411,8 +425,8 @@ function rendereartodo(){
 
 	if( pd && window.location.href.indexOf( "nomenu=1" ) == -1 ){
 		urln=window.location.href + "?nomenu=1";
-		$("body").append( "<div class=naveg><a target=_blank href=http://cad-dms04:8200>repo</a><div class=nota>pasar <a href="+urln+ ">nomenu=1</a> para ocultar</div></div>\n" );
+		$("body").append( "<div class=naveg><a target=_blank href=http://cad-dms04:8200>repo</a><a target=_blank href=http://cad-dms04/appweb/init/doc/ayuda.html>ayuda</a><div class=nota>pasar <a href="+urln+ ">nomenu=1</a> para ocultar<br></div></div>\n" );
 	}
-	$("html").prepend("<link rel=stylesheet type=text/css href=../doc.css />" );
+	$("html").prepend("<link rel=stylesheet type=text/css href=http://cad-dms04/appweb/init/doc/doc.css />" );
 
 }

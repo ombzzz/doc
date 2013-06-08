@@ -1,6 +1,7 @@
 <html>
 <script type="text/javascript" src=marked.js></script>
-<h4>marked</h4>
+<script type="text/javascript" src=jquery.js></script>
+<div class=me>marked</div>
 <script>
 // Set default options
 marked.setOptions({
@@ -19,5 +20,12 @@ marked.setOptions({
     return code;
   }
 });
-console.log(marked('i am using __markdown__.'));
+
+var me=marked("i am using __markdown__.\n\n* uno\n* dos\n");
+console.log(me);
+
+$(document).ready( function(){
+	$("div.me").html( me );
+
+})
 </script>

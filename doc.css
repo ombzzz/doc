@@ -211,11 +211,12 @@ span#be.visible, span#bd.visible, span#bi.visible, span#ba.visible {
 	/*text-align: center;*/
 	font-size:9;
 
-	width: 120px;
+	width: 130px;
 }
 .naveg a {
 /*display:block; */
 text-decoration:none;
+margin-right: 5px;
 }
 
 .naveg .otra {

@@ -176,11 +176,12 @@ else {
 
 	echo <<<FINNN
 	<div class=notice>
-	<p>para crear nuevo documento, <a target=_blank href=http://cad-dms06/appweb/init/doc/persist.php?accion=nuevo&doc=tareas>http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=tareas</a>
+	<p>para crear nuevo documento, <a target=_blank href=http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=tareas>http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=tareas</a>
 	<p>El tipo es opcional, actualmente solo se soporta minuta.
 
-	<p>Por ejemplo para crear una minuta nueva: <a target=_blank href=http://cad-dms06/appweb/init/doc/persist.php?accion=nuevo&doc=minuta-minimotec&tipo=minuta>http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=minuta-minimotec&tipo=minuta</a>
+	<p>Por ejemplo para crear una minuta nueva: <a target=_blank href=http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=minuta-minimotec&tipo=minuta>http://cad-dms04/appweb/init/doc/persist.php?accion=nuevo&doc=minuta-minimotec&tipo=minuta</a>
 
+	<p>Hay una <a href=http://cad-dms04/appweb/init/doc/ayuda.html>ayuda</a></p> 
 	</div><!--notice-->
 FINNN;
 	return;
